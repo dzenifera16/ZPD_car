@@ -2,15 +2,18 @@
 import RPi.GPIO as GPIO
 import time
 
-GPIO.setmode(GPIO.BOARD)
 
-GPIO.setup(PIN_TRIGGER, GPIO.OUT)
-GPIO.setup(PIN_ECHO, GPIO.IN)
 def distance():
-       
-       
        PIN_TRIGGER = 7
        PIN_ECHO = 11
+        
+       GPIO.setmode(GPIO.BOARD)
+
+       GPIO.setup(PIN_TRIGGER, GPIO.OUT)
+       GPIO.setup(PIN_ECHO, GPIO.IN)
+       
+       
+       
    
  
        GPIO.output(PIN_TRIGGER, GPIO.LOW)
@@ -41,9 +44,15 @@ def distance():
 if __name__ == '__main__':
     try:
         while True:
-            distance = distance()
-            print ("Measured distance = %.1f cm" % distance)
-            time.sleep(1) #
+            
+            distance2 = distance()
+            if distance2 > 30 :
+                print (" %.1f cm" % distance2)
+                time.sleep(1)
+            else:
+                print("par tuvu")
+                
+                time.sleep(1) #
         
     except KeyboardInterrupt:
         print("Measurement stopped by user")
