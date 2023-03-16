@@ -1,39 +1,95 @@
 import RPi.GPIO as GPIO
 import os
+import time
+import serial
 
-GPIO.cleanup()
-GPIO.setmode(GPIO.BCM)
+
+
+
+GPIO.setmode(GPIO.BOARD)
 GPIO.setwarnings(False)
 
-pin1 = 2
-pin2 = 3
+# pin1 = 3
+# pin2 = 5
 
-in1 = 4
-in2 = 17
-in3 = 27
+
+in1 = 15
+in2 = 16
+in3 = 18
 in4 = 22
 
-GPIO.setup(pin1,GPIO.OUT)
-GPIO.setup(pin2,GPIO.OUT)
+# GPIO.setup(pin1,GPIO.OUT)
+# GPIO.setup(pin2,GPIO.OUT)
 
 GPIO.setup(in1,GPIO.OUT)
 GPIO.setup(in2,GPIO.OUT)
 GPIO.setup(in4,GPIO.OUT)
 GPIO.setup(in3,GPIO.OUT)
 
-def pump():
-    GPIO.output(pin2, GPIO.HIGH)
-    print ("pump running")
-    GPIO.output(pin1, GPIO.HIGH)
+# GPIO.output(in1,True)#forwards left wheel
+# GPIO.output(in2,False)# backwards right wheel
+# GPIO.output(in3,True)#forwards right wheel
+# GPIO.output(in4,False)# backwards left wheel
+# 
+
+
+
+# 
+time.sleep(5)
+GPIO.cleanup()
+# 
+# # def pump():
+#     GPIO.output(pin2, GPIO.HIGH)
+#     print ("pump running")
+#     GPIO.output(pin1, GPIO.HIGH)
 def backwards():
-    GPIO.output(in1, GPIO.HIGH)
-    GPIO.output(in4, GPIO.HIGH)
-    print ("backwards running")
-    GPIO.output(in2, GPIO.LOW)
-    GPIO.output(in3, GPIO.LOW)
+    GPIO.setmode(GPIO.BOARD)
+    
+    GPIO.setup(in1,GPIO.OUT)
+    GPIO.setup(in2,GPIO.OUT)
+    GPIO.setup(in4,GPIO.OUT)
+    GPIO.setup(in3,GPIO.OUT)
+            
+    GPIO.output(in1,False)#forwards left wheel
+    GPIO.output(in2,True)# backwards right wheel
+    GPIO.output(in3,False)#forwards right wheel
+    GPIO.output(in4,True)# backwards left wheel
+
+    time.sleep(0.5)
+def forwards():
+    GPIO.setmode(GPIO.BOARD)
+    
+    GPIO.setup(in1,GPIO.OUT)
+    GPIO.setup(in2,GPIO.OUT)
+    GPIO.setup(in4,GPIO.OUT)
+    GPIO.setup(in3,GPIO.OUT)
+            
+
+    GPIO.output(in1,True)#forwards left wheel
+    GPIO.output(in2,False)# backwards right wheel
+    GPIO.output(in3,True)#forwards right wheel
+    GPIO.output(in4,False)# backwards left wheel
+    time.sleep(0.5)
+def forwards():
+    GPIO.setmode(GPIO.BOARD)
+    
+    GPIO.setup(in1,GPIO.OUT)
+    GPIO.setup(in2,GPIO.OUT)
+    GPIO.setup(in4,GPIO.OUT)
+    GPIO.setup(in3,GPIO.OUT)
+            
+
+    GPIO.output(in1,True)#forwards left wheel
+    GPIO.output(in2,False)# backwards right wheel
+    GPIO.output(in3,True)#forwards right wheel
+    GPIO.output(in4,False)# backwards left wheel
+    time.sleep(0.5)
+    
 def clean():
     GPIO.cleanup()
-    
-pump()
+#     
+# pump()
 backwards()
+forwards()
 clean()
+
