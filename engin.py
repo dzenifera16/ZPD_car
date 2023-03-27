@@ -3,8 +3,8 @@ import os
 import time
 import serial
 
-bluetooth_serial = serial.Serial("/dev/ttuS0", baudrate= 9600)
-bluetooth_serial.flushInput()
+# bluetooth_serial = serial.Serial("/dev/ttuS0", baudrate= 9600)
+# bluetooth_serial.flushInput()
 
 GPIO.setmode(GPIO.BOARD)
 GPIO.setwarnings(False)
@@ -35,6 +35,44 @@ M1_PWM.start(0)
 M2_PWM.start(0)
 
 
+def distance():
+       PIN_TRIGGER = 7
+       PIN_ECHO = 11
+        
+       GPIO.setmode(GPIO.BOARD)
+
+       GPIO.setup(PIN_TRIGGER, GPIO.OUT)
+       GPIO.setup(PIN_ECHO, GPIO.IN)
+       
+       
+       
+   
+ 
+       GPIO.output(PIN_TRIGGER, GPIO.LOW)
+ 
+#        print ("Waiting for sensor to settle")
+ 
+       time.sleep(0.00001)
+ 
+#        print ("Calculating distance")
+
+       GPIO.output(PIN_TRIGGER, GPIO.HIGH)
+       
+       startTime = time.time()
+       arrivalTime = time.time()
+
+       time.sleep(0.0001)
+ 
+       GPIO.output(PIN_TRIGGER, GPIO.LOW)
+ 
+       while GPIO.input(PIN_ECHO)==0:
+             startTime = time.time()
+       while GPIO.input(PIN_ECHO)==1:
+             arrivalTime = time.time()
+       duration = arrivalTime - startTime
+       distance = round((duration * 34300)/ 2)
+       return distance
+    
 def move_backward(velocity):
     GPIO.setmode(GPIO.BOARD)
     
@@ -119,13 +157,16 @@ def clean():
 #     
 # pump()
 while True:
-    
-    if bluetooth_serial.in_waiting > 0:
-        command = bluetooth_serial.readline().decode().strip()
+    distance2 = distance()
+    command= input("Ievadi komandu: ")
+#     if bluetooth_serial.in_waiting > 0:
+#         command = bluetooth_serial.readline().decode().strip()
     velocity = 0
-    if command == 'F':
+    
+    if command == 'F' and distance2 > 30:
         velocity = 100
         move_forward(velocity)
+        print(distance2)
     elif command == 'B':
         velocity = 100
         move_backward(velocity)
@@ -135,8 +176,9 @@ while True:
     elif command == 'R':
         velocity = 100
         turn_right(velocity)
-    elif command == 'S':
+    elif command == 'S'  :
         stop()
+
     
     else:
         print("Invalid command")
