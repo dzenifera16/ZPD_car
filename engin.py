@@ -26,14 +26,24 @@ GPIO.setup(in2,GPIO.OUT)
 GPIO.setup(in4,GPIO.OUT)
 GPIO.setup(in3,GPIO.OUT)
 
-
-
+channel = 16
+GPIO.setup(channel, GPIO.IN)
 
 M1_PWM = GPIO.PWM(pin1, 255)
 M2_PWM = GPIO.PWM(pin2, 255)
 M1_PWM.start(0)
 M2_PWM.start(0)
 
+
+def callback(channel):
+    if GPIO.input(channel):
+        print('sound detected')
+
+    else: 
+        print('sound detected')
+
+GPIO.add_event_detect(channel, GPIO.BOTH, bouncetime=100)
+GPIO.add_event_callback(channel, callback)
 
 def distance():
        PIN_TRIGGER = 7
@@ -158,15 +168,24 @@ def clean():
 # pump()
 while True:
     distance2 = distance()
+    sound= callback(channel)
+    print(sound)
     command= input("Ievadi komandu: ")
 #     if bluetooth_serial.in_waiting > 0:
 #         command = bluetooth_serial.readline().decode().strip()
     velocity = 0
     
-    if command == 'F' and distance2 > 30:
+    if command == 'F' :
         velocity = 100
         move_forward(velocity)
         print(distance2)
+        if distance2 > 30:
+            move_forward(velocity)
+            
+        else:
+            stop()
+            
+            
     elif command == 'B':
         velocity = 100
         move_backward(velocity)
@@ -176,12 +195,12 @@ while True:
     elif command == 'R':
         velocity = 100
         turn_right(velocity)
-    elif command == 'S'  :
+    elif command == 'S' :
         stop()
 
     
     else:
-        print("Invalid command")
+        print("par tuvu")
     time.sleep(0.1)
 
 
