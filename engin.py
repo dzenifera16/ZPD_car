@@ -3,7 +3,8 @@ import os
 import time
 import serial
 
-# bluetooth_serial = serial.Serial("/dev/ttuS0", baudrate= 9600)
+from time import sleep
+ # bluetooth_serial = serial.Serial("/dev/ttuS0", baudrate= 9600)
 # bluetooth_serial.flushInput()
 
 GPIO.setmode(GPIO.BOARD)
@@ -161,30 +162,44 @@ def stop():
     
     M1_PWM.ChangeDutyCycle(velocity)
     M2_PWM.ChangeDutyCycle(velocity)
+def btConnect():
+    ser = serial.Serial ("/dev/ttyAMA0", 9600) 
+    received_data = ser.read()              #read serial port
+    sleep(0.03)
+    data_left = ser.inWaiting()             #check for remaining byte
+    received_data += ser.read(data_left)
+    print (received_data)                   #print received data
+    ser.write(received_data)
+    return received_data
     
 def clean():
     GPIO.cleanup()
 #     
 # pump()
 while True:
-    distance2 = distance()
-    sound= callback(channel)
-    print(sound)
-    command= input("Ievadi komandu: ")
-#     if bluetooth_serial.in_waiting > 0:
-#         command = bluetooth_serial.readline().decode().strip()
-    velocity = 0
+
+#     distance2 = distance()
+#     sound= callback(channel)
+#     print(sound)
+#     command = input()
+#     command = btConnect()
+#     btConnect()
+# 
+#     velocity = 0
+#     print(btConnect())
+#     print("test")
+    ser = serial.Serial ("/dev/ttyAMA0", 9600) 
+    command2= ser.read()
+    command =command2.decode()
+    print(command)
+
     
-    if command == 'F' :
+    
+    if command== "F":
+        print("Labais!!!!")
         velocity = 100
-        move_forward(velocity)
-        print(distance2)
-        if distance2 > 30:
-            move_forward(velocity)
-            
-        else:
-            stop()
-            
+        
+                   
             
     elif command == 'B':
         velocity = 100
@@ -196,12 +211,13 @@ while True:
         velocity = 100
         turn_right(velocity)
     elif command == 'S' :
+        velocity = 0
         stop()
 
-    
-    else:
-        print("par tuvu")
-    time.sleep(0.1)
+#     
+#     else:
+#         print("par tuvu")
+#     time.sleep(0.1)
 
 
 
